@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+}
+
+group = 'com.example'
+version = '1.0.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication){
+            artifact("build/libs/my-app-$version"+".jar"){
+                extension 'jar'
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name 'nexus'
+            url "http://192.168.64.8:8081/repository/maven-snapshots/"
+            allowInsecureProtocol = true
+            credentials{
+                username project.nexusUsername
+                password project.nexusPassword
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
+    testImplementation 'junit:junit:4.12'
+}
+
